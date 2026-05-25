@@ -5,7 +5,9 @@
 #WARNINNG ALERT : YE CODE KISI BHI GANDU DOST KO N BHEJE
 #WARNA WAH APANE AAP KO GANDU SAMAJHNE LGEGA 😂
 
-import requests, os, json, binascii, time, urllib3, base64, datetime, re, socket, ssl, asyncio, aiohttp, random, traceback
+import requests, os, json, binascii, time, urllib3, base64, datetime, re, socket, ssl, asyncio, random, traceback
+import aiohttp
+from aiohttp import web
 from protobuf_decoder.protobuf_decoder import Parser
 from xDL import *
 from autoup import *
@@ -15,6 +17,7 @@ from Pb2 import DEcwHisPErMsG_pb2, MajoRLoGinrEs_pb2, PorTs_pb2, MajoRLoGinrEq_p
 import google.protobuf.json_format as json_format
 
 import sys, time, random
+
 
 def gradient_text(text):
     colors = [91, 93, 92, 96, 94, 95]  # multi color cycle
@@ -561,6 +564,8 @@ async def MaiiiinE():
     await asyncio.gather(task1, task2)
 
 async def StarTinG():
+    await start_web_server()
+
     while True:
         try:
             await MaiiiinE()
@@ -568,6 +573,23 @@ async def StarTinG():
             print(f"Restarting due to error: {e}")
             traceback.print_exc()
             await asyncio.sleep(5)
+            
+async def health(request):
+    return web.Response(text="BOT ONLINE")
+
+async def start_web_server():
+    app = web.Application()
+    app.router.add_get('/', health)
+
+    port = int(os.environ.get("PORT", 10000))
+
+    runner = web.AppRunner(app)
+    await runner.setup()
+
+    site = web.TCPSite(runner, "0.0.0.0", port)
+    await site.start()
+
+    print(f"\n🌐 WEB PORT OPEN : {port}\n")            
 
 if __name__ == '__main__':
     asyncio.run(StarTinG())
